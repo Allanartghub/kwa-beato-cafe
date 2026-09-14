@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f7f1e5" />
+  <title>Kwa Beato Café — RSVP</title>
+
+  <!-- Optional web fonts. Remove these two lines if you want fully local/offline fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800&family=Schoolbell&display=swap" rel="stylesheet">
+
+  <!--
+    BRAND FONT NOTE:
+    Cooper BT is used for body copy in the Coffee Nomads brand system.
+    It is not bundled in this demo file. If you have a licensed webfont file,
+    add it with @font-face and replace the fallback stack below.
+  -->
+
+  <style>
+    :root{
+      --green:#18340b;
+      --yellow:#FBC22D;
+      --white:#ffffff;
+      --paper:#18340b;
+      --paper-2:#214711;
+      --ink:#ffffff;
+      --coffee:#FBC22D;
+      --coffee-dark:#FBC22D;
+      --line:rgba(255,255,255,.72);
+      --soft-line:rgba(255,255,255,.22);
+      --cream:#ffffff;
+      --shadow:0 14px 34px rgba(0,0,0,.18);
+      --radius-lg:28px;
+      --radius-md:20px;
+      --radius-sm:14px;
+
+      /* Coffee Nomads typography */
+      --heading:"League Spartan", Arial, sans-serif;
+      --body:"Cooper BT", "Cooper Black", Georgia, serif;
+      --accent:"Schoolbell", "Comic Sans MS", cursive;
+
+      /*
+        To guarantee the exact Cooper BT font on every phone:
+        add your licensed webfont file(s) to /assets/fonts/ and define @font-face.
+        Example:
+        @font-face {
+          font-family: "Cooper BT";
+          src: url("assets/fonts/cooper-bt.woff2") format("woff2");
+          font-weight: 400;
+          font-style: normal;
+          font-display: swap;
+        }
+      */
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      padding-bottom:86px;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 18% 6%, rgba(251,194,45,.10), transparent 24%),
+        radial-gradient(circle at 82% 32%, rgba(255,255,255,.035), transparent 25%),
+        var(--green);
+      font-family:var(--body);
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.26;
+      mix-blend-mode:soft-light;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E");
+      z-index:999;
+    }
+
+    a{color:inherit}
+    img{display:block;max-width:100%}
+    button,input,select,textarea{
+      font-family:var(--body);
+      font-size:inherit;
+    }
+
+    .site{
+      width:min(100%, 760px);
+      margin:0 auto;
+      position:relative;
+    }
+
+    .pad{padding-inline:20px}
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:18px 20px 10px;
+      position:relative;
+      z-index:20;
+    }
+
+    .brand{
+      font-family:var(--heading);
+      font-weight:800;
+      font-size:1.25rem;
+      line-height:.85;
+      transform:rotate(-2deg);
+      letter-spacing:.02em;
+    }
+    .brand span{display:block}
+
+    .logo-placeholder{
+      width:432px;
+      height:262px;
+      border:none;
+      border-radius:0;
+      background:transparent;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:0;
+      transform:rotate(-2deg);
+      box-shadow:none;
+      overflow:visible;
+      text-decoration:none;
+      flex:0 0 auto;
+    }
+
+    .logo-img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+
+    .mini-nav{
+      color:var(--white);
+      display:flex;
+      gap:12px;
+      align-items:center;
+      font-size:.72rem;
+      text-transform:uppercase;
+      font-weight:700;
+      letter-spacing:.08em;
+    }
+    .mini-nav a{
+      text-decoration:none;
+      position:relative;
+    }
+    .mini-nav a::after{
+      content:"";
+      position:absolute;
+      left:0; right:0; bottom:-3px;
+      height:2px;
+      background:var(--coffee);
+      transform:scaleX(0);
+      transform-origin:left;
+      transition:.2s ease;
+    }
+    .mini-nav a:hover::after{transform:scaleX(1)}
+
+    .hero{
+      position:relative;
+      padding:22px 20px 24px;
+      min-height:690px;
+    }
+
+    .eyebrow{
+      font-family:var(--accent);
+      color:var(--yellow);
+      font-size:1.1rem;
+      transform:rotate(-2deg);
+      display:inline-block;
+      margin-bottom:2px;
+    }
+
+    h1,h2,h3,p{margin-top:0}
+    h1,h2,h3{font-family:var(--heading);}
+
+    .hero-title{
+      color:var(--white);
+      font-family:var(--heading);
+      font-weight:800;
+      font-size:clamp(4rem, 18vw, 7.3rem);
+      line-height:.73;
+      margin:6px 0 22px;
+      letter-spacing:-.04em;
+      max-width:520px;
+      transform:rotate(-1deg);
+      position:relative;
+      z-index:4;
+    }
+
+    .hero-title::after{
+      content:"";
+      position:absolute;
+      left:8px;
+      width:62%;
+      bottom:-15px;
+      height:13px;
+      border-radius:70%;
+      border-bottom:5px solid var(--coffee);
+      transform:rotate(-2deg);
+      opacity:.85;
+    }
+
+    .hero-copy{
+      color:var(--white);
+      max-width:430px;
+      font-family:var(--accent);
+      font-size:1.75rem;
+      line-height:1.05;
+      margin:34px 0 8px;
+      position:relative;
+      z-index:5;
+    }
+
+    .hero-sub{
+      color:rgba(255,255,255,.88);
+      max-width:380px;
+      font-size:.98rem;
+      line-height:1.55;
+      margin-bottom:18px;
+      position:relative;
+      z-index:5;
+    }
+
+    .cta{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:9px;
+      padding:14px 21px;
+      border:2px solid var(--coffee-dark);
+      background:#FBC22D;
+      color:#18340b;
+      text-decoration:none;
+      border-radius:999px 940px 999px 920px;
+      box-shadow:0 5px 0 var(--coffee-dark);
+      font-weight:700;
+      transform:rotate(-1deg);
+      transition:.18s ease;
+      position:relative;
+      z-index:5;
+    }
+    .cta:hover{transform:translateY(-2px) rotate(-1deg);box-shadow:0 7px 0 var(--coffee-dark)}
+    .cta:active{transform:translateY(2px) rotate(-1deg);box-shadow:0 2px 0 var(--coffee-dark)}
+
+    .hero-art{
+      position:absolute;
+      right:-26px;
+      top:115px;
+      width:58%;
+      min-width:250px;
+      max-width:430px;
+      z-index:1;
+    }
+
+    .placeholder{
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.08), rgba(251,194,45,.07)),
+        rgba(255,255,255,.035);
+      border:2px dashed rgba(251,194,45,.72);
+      color:rgba(255,255,255,.78);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:18px;
+      font-family:var(--accent);
+      line-height:1.05;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .placeholder small{
+      display:block;
+      font-family:var(--body);
+      font-size:.72rem;
+      margin-top:6px;
+      opacity:.8;
+    }
+
+
+    .one-day{
+      position:absolute;
+      right:20px;
+      top:42px;
+      width:104px;
+      height:104px;
+      background:#FBC22D;
+      color:#18340b;
+      border-radius:50% 43% 52% 46%;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      font-family:var(--accent);
+      font-size:1.4rem;
+      line-height:.9;
+      transform:rotate(8deg);
+      z-index:6;
+      border:2px solid rgba(24,49,84,.18);
+    }
+
+    .doodle{
+      color:var(--yellow);
+      font-family:var(--accent);
+      position:absolute;
+      z-index:6;
+      pointer-events:none;
+    }
+
+    .doodle-1{
+      right:14px;
+      top:376px;
+      transform:rotate(7deg);
+      width:110px;
+      font-size:1.05rem;
+      line-height:.95;
+    }
+
+    .squiggle{
+      width:72px;
+      height:34px;
+      border-top:3px solid var(--coffee);
+      border-radius:50%;
+      transform:rotate(-6deg);
+      margin-top:6px;
+    }
+
+    /* Scrolling Allan sticker */
+    .allans-track{
+      position:absolute;
+      inset:0 0 auto;
+      height:2850px;
+      pointer-events:none;
+      z-index:15;
+    }
+
+    .allan-fall{
+      position:fixed;
+      top:150px;
+      left:50%;
+      width:105px;
+      transform:translate3d(140px,0,0) rotate(6deg);
+      transform-origin:center;
+      will-change:transform, opacity;
+      pointer-events:none;
+      filter:drop-shadow(0 10px 10px rgba(0,0,0,.08));
+      z-index:30;
+    }
+
+    .allan-img{
+      display:block;
+      width:105px;
+      height:auto;
+      max-height:150px;
+      object-fit:contain;
+    }
+
+    .allan-note{
+      color:var(--yellow);
+      position:absolute;
+      width:96px;
+      left:-84px;
+      top:88px;
+      font-family:var(--accent);
+      font-size:.94rem;
+      transform:rotate(-10deg);
+    }
+
+    section{
+      position:relative;
+      padding:52px 20px;
+    }
+
+    .section-title{
+      color:var(--white);
+      font-family:var(--heading);
+      font-weight:800;
+      font-size:3rem;
+      line-height:.9;
+      margin-bottom:26px;
+      transform:rotate(-1deg);
+      position:relative;
+      display:inline-block;
+    }
+
+    .section-title::after{
+      content:"";
+      position:absolute;
+      height:9px;
+      border-bottom:4px solid var(--coffee);
+      left:8%; right:4%;
+      bottom:-10px;
+      border-radius:50%;
+      transform:rotate(-2deg);
+    }
+
+    .invite{
+      padding-top:38px;
+    }
+
+    .invite-grid{
+      display:grid;
+      grid-template-columns:44% 1fr;
+      gap:20px;
+      align-items:center;
+    }
+
+    .polaroid{
+      background:#FBC22D;
+      color:#18340b;
+      padding:10px 10px 30px;
+      box-shadow:0 10px 30px rgba(37,29,21,.13);
+      transform:rotate(-4deg);
+      border:1px solid rgba(251,194,45,.55);
+      position:relative;
+    }
+
+    .polaroid .lifestyle-img{
+      aspect-ratio:4/3;
+      border-radius:2px;
+    }
+
+    .polaroid figcaption{
+      color:#FFFFFF;
+      font-family:var(--accent);
+      text-align:center;
+      font-size:1.25rem;
+      position:absolute;
+      left:10px;right:10px;bottom:4px;
+    }
+
+    .invite-copy p{
+      color:rgba(255,255,255,.9);
+      font-size:1rem;
+      line-height:1.65;
+      margin:0;
+    }
+
+    .side-doodle{
+      color:var(--yellow);
+      margin-top:18px;
+      font-family:var(--accent);
+      font-size:1.25rem;
+      transform:rotate(3deg);
+    }
+
+    .expect{
+      padding-top:36px;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+    }
+
+    .card{
+      min-height:148px;
+      border:2px solid var(--line);
+      border-radius:28px 21px 30px 18px;
+      padding:18px 10px 14px;
+      text-align:center;
+      background:rgba(255,255,255,.035);
+      color:var(--white);
+      box-shadow:3px 4px 0 rgba(251,194,45,.10);
+      transition:background .22s ease, border-color .22s ease, transform .22s ease, box-shadow .22s ease;
+    }
+    .card *{
+      transition:color .22s ease, transform .22s ease;
+    }
+    .card:nth-child(2){transform:rotate(1deg)}
+    .card:nth-child(3){transform:rotate(-1deg)}
+    .card:hover,
+    .card:focus,
+    .card.is-active{
+      transform:translateY(-5px) rotate(-1deg);
+      background:#FBC22D;
+      border-color:#FBC22D;
+      box-shadow:6px 7px 0 rgba(255,255,255,.12);
+      outline:none;
+    }
+
+    .card:hover .card-icon,
+    .card:focus .card-icon,
+    .card.is-active .card-icon{
+      color:#ffffff;
+      transform:scale(1.08) rotate(-4deg);
+    }
+
+    .card:hover h3,
+    .card:focus h3,
+    .card.is-active h3{
+      color:#18340b;
+    }
+
+    .card:hover p,
+    .card:focus p,
+    .card.is-active p{
+      color:#18340b;
+    }
+
+    .card-icon{
+      color:var(--yellow);
+      font-size:2.3rem;
+      margin-bottom:9px;
+      filter:grayscale(1);
+    }
+
+    .card h3{
+      color:var(--yellow);
+      font-family:var(--heading);
+      font-weight:700;
+      font-size:1.45rem;
+      margin-bottom:7px;
+    }
+
+    .card p{
+      color:rgba(255,255,255,.82);
+      font-size:.78rem;
+      line-height:1.4;
+      margin:0;
+    }
+
+    .hope-sit{
+      margin-top:30px;
+      display:flex;
+      justify-content:flex-end;
+      position:relative;
+      min-height:170px;
+    }
+
+    .hope-img{
+      width:180px;
+      height:auto;
+      max-height:190px;
+      object-fit:contain;
+      transform:rotate(2deg);
+      filter:drop-shadow(0 10px 12px rgba(24,52,11,.08));
+    }
+
+    .hope-label{
+      color:var(--yellow);
+      position:absolute;
+      right:170px;
+      bottom:36px;
+      width:125px;
+      font-family:var(--accent);
+      font-size:1rem;
+      transform:rotate(-6deg);
+    }
+
+    .rsvp{
+      padding-top:34px;
+    }
+
+    .rsvp-wrap{
+      border:2px solid var(--line);
+      background:rgba(255,255,255,.035);
+      border-radius:26px 34px 22px 31px;
+      padding:18px;
+      box-shadow:6px 7px 0 rgba(251,194,45,.10);
+      position:relative;
+    }
+
+    .rsvp-intro{
+      color:var(--yellow);
+      font-family:var(--accent);
+      font-size:1.25rem;
+      margin:-6px 0 16px;
+      transform:rotate(-1deg);
+    }
+
+    .field{
+      margin-bottom:15px;
+    }
+
+    .field label, .legend{
+      color:var(--white);
+      display:block;
+      font-size:.82rem;
+      font-weight:700;
+      margin-bottom:7px;
+    }
+
+    .field input,
+    .field select,
+    .field textarea{
+      width:100%;
+      border:1.8px solid rgba(255,255,255,.42);
+      color:var(--green);
+      background:var(--white);
+      border-radius:13px 10px 15px 11px;
+      min-height:46px;
+      padding:11px 12px;
+      outline:none;
+      transition:.18s ease;
+    }
+
+    .field textarea{
+      min-height:95px;
+      resize:vertical;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus{
+      border-color:var(--yellow);
+      box-shadow:0 0 0 4px rgba(251,194,45,.16);
+      transform:rotate(-.25deg);
+    }
+
+
+    input::placeholder,
+    textarea::placeholder{
+      font-family:var(--body);
+      color:rgba(24,52,11,.48);
+    }
+
+    select,
+    option{
+      font-family:var(--body);
+    }
+
+    .field input,
+    .field select,
+    .field textarea{
+      font-family:var(--body);
+      font-weight:400;
+    }
+
+    .choice-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:9px;
+    }
+
+    .choice{
+      position:relative;
+    }
+
+    .choice input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* Coffee choice pills — authoritative brand styling */
+    .rsvp-wrap .choice label{
+      background:#18340B !important;
+      color:#FFFFFF !important;
+      border:2px solid #FBC22D !important;
+      min-height:46px;
+      border-radius:999px 880px 999px 940px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 12px;
+      font-family:var(--body);
+      font-size:.84rem;
+      font-weight:600;
+      cursor:pointer;
+      opacity:1 !important;
+      filter:none !important;
+      box-shadow:none;
+      transition:
+        background .18s ease,
+        color .18s ease,
+        border-color .18s ease,
+        transform .18s ease,
+        box-shadow .18s ease;
+    }
+
+    .rsvp-wrap .choice input:checked + label{
+      background:#FBC22D !important;
+      color:#18340B !important;
+      border-color:#FBC22D !important;
+      opacity:1 !important;
+      filter:none !important;
+      box-shadow:0 5px 0 rgba(0,0,0,.14);
+      transform:translateY(-2px) rotate(-1deg) scale(1.03);
+    }
+
+    .rsvp-wrap .choice label:hover{
+      background:#18340B !important;
+      color:#FFFFFF !important;
+      border-color:#FBC22D !important;
+      transform:translateY(-2px) rotate(-1deg);
+      box-shadow:0 5px 0 rgba(0,0,0,.14);
+    }
+
+    .rsvp-wrap .choice input:checked + label:hover{
+      background:#FBC22D !important;
+      color:#18340B !important;
+      border-color:#FBC22D !important;
+    }
+
+    .rsvp-wrap .choice input:focus-visible + label{
+      outline:2px solid #FFFFFF;
+      outline-offset:3px;
+    }
+
+    .submit{
+      width:100%;
+      border:none;
+      color:var(--green);
+      background:var(--yellow);
+      border:2px solid var(--coffee-dark);
+      border-radius:999px 880px 999px 940px;
+      min-height:54px;
+      font-weight:700;
+      box-shadow:0 5px 0 var(--coffee-dark);
+      cursor:pointer;
+      transition:.18s ease;
+      margin-top:4px;
+    }
+    .submit:hover{transform:translateY(-2px);box-shadow:0 7px 0 var(--coffee-dark)}
+    .submit:active{transform:translateY(2px);box-shadow:0 2px 0 var(--coffee-dark)}
+
+    .tiny{
+      color:rgba(255,255,255,.66);
+      font-size:.72rem;
+      opacity:.72;
+      line-height:1.4;
+      margin-top:12px;
+      text-align:center;
+    }
+
+    .success{
+      display:none;
+      margin-top:18px;
+      background:#FBC22D;
+      color:#18340b;
+      border:2px solid var(--yellow);
+      border-radius:22px 28px 20px 30px;
+      padding:23px 18px;
+      text-align:center;
+      box-shadow:4px 5px 0 rgba(24,49,84,.05);
+    }
+
+    .success.show{
+      display:block;
+      animation:popIn .45s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .success h3{
+      color:var(--green);
+      font-family:var(--heading);
+      font-weight:800;
+      font-size:2.2rem;
+      margin-bottom:8px;
+    }
+
+    .success p{
+      margin:0;
+      line-height:1.55;
+      font-size:.92rem;
+    }
+
+    @keyframes popIn{
+      from{opacity:0;transform:translateY(8px) scale(.97) rotate(-1deg)}
+      to{opacity:1;transform:none}
+    }
+
+    .footer{
+      color:var(--white);
+      padding:64px 20px 34px;
+      text-align:center;
+      position:relative;
+    }
+
+    .footer::before{
+      content:none;
+      display:none;
+    }
+
+    .footer-script{
+      color:var(--yellow);
+      font-family:var(--accent);
+      font-size:2.15rem;
+      line-height:1;
+      margin-bottom:12px;
+    }
+
+    .footer small{
+      color:rgba(255,255,255,.72);
+      display:block;
+      font-size:.67rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-weight:700;
+    }
+
+    .coffee-photo-2{
+      margin:22px 0 -10px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .coffee-photo-2 .lifestyle-img-wide{
+      width:88%;
+    }
+
+    .floating-bean{
+      position:absolute;
+      font-size:1.2rem;
+      opacity:.72;
+      animation:beanFloat 3.5s ease-in-out infinite alternate;
+    }
+    .bean-a{left:8px;top:110px}
+    .bean-b{right:18px;bottom:22px;animation-delay:.9s}
+    @keyframes beanFloat{
+      to{transform:translateY(-9px) rotate(10deg)}
+    }
+
+    @media (min-width:620px){
+      .hero{
+        min-height:740px;
+        padding-inline:42px;
+      }
+      .topbar{padding-inline:42px}
+      section{padding-inline:42px}
+      .hero-art{right:16px}
+      .rsvp-wrap{padding:28px}
+      .form-grid{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:0 16px;
+      }
+      .full{grid-column:1/-1}
+  
+    input::placeholder,
+    textarea::placeholder{
+      font-family:var(--body);
+      color:rgba(24,52,11,.48);
+    }
+
+    select,
+    option{
+      font-family:var(--body);
+    }
+
+    .field input,
+    .field select,
+    .field textarea{
+      font-family:var(--body);
+      font-weight:400;
+    }
+
+    .choice-grid{grid-template-columns:repeat(4,1fr)}
+      .cards{gap:16px}
+      .card p{font-size:.86rem}
+      .allan-fall{width:120px}
+      .allan-img{width:120px;max-height:170px}
+    }
+
+    @media (max-width:430px){
+      .mini-nav a:nth-child(-n+2){display:none}
+      .hero{
+        min-height:760px;
+      }
+      .hero-art{
+        width:68%;
+        top:170px;
+        right:-62px;
+        opacity:.95;
+      }
+      .hero-copy{margin-top:50px;font-size:1.6rem;max-width:275px}
+      .hero-sub{max-width:260px;font-size:.91rem}
+      .one-day{right:10px;top:42px;width:88px;height:88px;font-size:1.2rem}
+      .doodle-1{right:6px;top:455px;width:94px;font-size:.96rem}
+      .invite-grid{grid-template-columns:1fr}
+      .polaroid{width:72%;margin:0 auto 18px}
+      .cards{grid-template-columns:1fr 1fr}
+      .card:last-child{grid-column:1/-1;width:52%;justify-self:center}
+      .hope-label{right:162px;width:105px}
+      .allan-fall{width:90px}
+      .allan-img{width:90px;max-height:130px}
+      .allan-note{display:none}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      html{scroll-behavior:auto}
+      *{animation:none !important;transition:none !important}
+      .allan-fall{position:absolute;top:980px;right:16px;left:auto;transform:none !important}
+    }
+  
+    .event-meta{
+      display:inline-block;
+      margin:4px 0 18px;
+      color:var(--yellow);
+      font-family:var(--heading);
+      font-size:.82rem;
+      font-weight:700;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+
+    .capacity-note{
+      margin:14px 0 0;
+      max-width:270px;
+      color:rgba(255,255,255,.72);
+      font-family:var(--accent);
+      font-size:1rem;
+      line-height:1.15;
+      transform:rotate(-1deg);
+    }
+
+    .label-note{
+      font-family:var(--accent);
+      font-weight:400;
+      color:var(--yellow);
+      margin-left:4px;
+      font-size:.95em;
+    }
+
+    .rsvp-intro span{
+      color:rgba(255,255,255,.82);
+      font-family:var(--body);
+      font-size:.82rem;
+      line-height:1.45;
+    }
+
+    .success-stamp{
+      display:inline-block;
+      margin-top:18px;
+      padding:7px 10px 5px;
+      border:2px solid var(--green);
+      border-radius:999px 840px 999px 900px;
+      font-family:var(--heading);
+      font-size:.67rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      transform:rotate(-2deg);
+    }
+
+    .footer-tagline{
+      margin-top:6px;
+      color:rgba(255,255,255,.75);
+      font-family:var(--accent);
+      font-size:1.1rem;
+    }
+
+    .sticky-rsvp{
+      position:fixed;
+      left:12px;
+      right:12px;
+      bottom:12px;
+      z-index:90;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 10px 10px 14px;
+      background:rgba(24,52,11,.94);
+      border:1.5px solid rgba(251,194,45,.72);
+      border-radius:18px 15px 20px 14px;
+      box-shadow:0 12px 30px rgba(0,0,0,.28);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+    }
+
+    .sticky-rsvp > div{
+      min-width:0;
+    }
+
+    .sticky-rsvp strong{
+      display:block;
+      color:var(--white);
+      font-family:var(--heading);
+      font-size:.78rem;
+      line-height:1;
+    }
+
+    .sticky-rsvp span{
+      display:block;
+      margin-top:4px;
+      color:rgba(255,255,255,.68);
+      font-size:.63rem;
+      white-space:nowrap;
+    }
+
+    .sticky-rsvp a{
+      flex:0 0 auto;
+      padding:10px 13px;
+      border-radius:999px;
+      background:var(--yellow);
+      color:var(--green);
+      text-decoration:none;
+      font-family:var(--heading);
+      font-size:.74rem;
+      font-weight:800;
+    }
+
+    @media (min-width:760px){
+      .sticky-rsvp{display:none;}
+    }
+
+  
+    .hero-house{
+      width:100%;
+      min-height:340px;
+      aspect-ratio:4 / 5;
+      object-fit:cover;
+      border-radius:46% 54% 38% 62% / 54% 42% 58% 46%;
+      transform:rotate(2deg);
+      box-shadow:var(--shadow);
+      border:2px solid rgba(251,194,45,.62);
+      background:rgba(255,255,255,.035);
+    }
+
+    .lifestyle-img{
+      display:block;
+      width:100%;
+      aspect-ratio:4 / 3;
+      object-fit:cover;
+      border-radius:2px;
+    }
+
+    .lifestyle-img-wide{
+      width:88%;
+      aspect-ratio:16 / 10;
+      border-radius:32px 26px 30px 24px;
+      transform:rotate(1deg);
+      box-shadow:var(--shadow);
+      border:2px solid rgba(251,194,45,.42);
+    }
+
+  
+    /* Final requested image and logo adjustments */
+    .polaroid figcaption{
+      color:#FFFFFF !important;
+    }
+
+    .coffee-photo-2{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .coffee-photo-2 .lifestyle-img-wide{
+      width:88%;
+      aspect-ratio:5 / 4 !important;
+      height:auto !important;
+      object-fit:contain !important;
+      object-position:center center !important;
+      border-radius:32px 26px 30px 24px;
+      background:#18340B;
+      transform:rotate(1deg);
+      box-shadow:var(--shadow);
+      border:2px solid rgba(251,194,45,.42);
+    }
+
+  
+    @media (max-width:620px){
+      .topbar{
+        align-items:flex-start;
+      }
+
+      .logo-placeholder{
+        width:min(432px, 68vw);
+        height:auto;
+        aspect-ratio:432 / 262;
+      }
+
+      .logo-img{
+        width:100%;
+        height:100%;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <main class="site">
+
+    <header class="topbar">
+      <a href="#home" class="logo-placeholder" aria-label="Coffee Nomads home">
+        <img src="assets/logo.svg" alt="Coffee Nomads logo" class="logo-img" />
+      </a>
+      <nav class="mini-nav" aria-label="Main">
+        <a href="#invite">People</a>
+        <a href="#expect">Coffee</a>
+        <a href="#rsvp">RSVP</a>
+      </nav>
+    </header>
+
+    <!-- ALLAN STICKER -->
+    <div class="allan-fall" id="allanSticker" aria-hidden="true">
+      <img src="assets/allan.svg" alt="" class="allan-img" />
+      <div class="allan-note">how the coffee has Allan feeling </div>
+    </div>
+
+    <section class="hero" id="home">
+      <div class="eyebrow">one day. our place. your café.</div>
+      <h1 class="hero-title">Kwa Beato<br>Café</h1>
+
+      <div class="one-day">ONE<br>DAY<br>ONLY</div>
+
+      <!-- HERO HOUSE / PEOPLE ILLUSTRATION -->
+      <div class="hero-art">
+        <img
+          src="assets/kwa-beato-house.jpg"
+          alt="Kwa Beato house illustration placeholder"
+          class="hero-house"
+        />
+      </div>
+
+      <div class="event-meta">Saturday · 3rd October · 2–7pm · Dublin</div>
+      <p class="hero-copy">We’re opening the house, making way too much coffee, and having people over.</p>
+      <p class="hero-sub">This one’s for the people who got the link.</p>
+
+      <a class="cta" href="#rsvp">I’m coming <span aria-hidden="true">→</span></a>
+      <p class="capacity-note">Spots are limited. We’re keeping it house-sized.</p>
+
+      <div class="doodle doodle-1">
+        coffee is better<br>with people ♡
+        <div class="squiggle"></div>
+      </div>
+
+      <span class="floating-bean bean-a">●</span>
+      <span class="floating-bean bean-b">●</span>
+    </section>
+
+    <section class="invite" id="invite">
+      <div class="invite-grid">
+        <figure class="polaroid">
+          <!-- LIFESTYLE PHOTO 1 -->
+          <img
+            src="assets/lifestyle-01.jpg"
+            alt="Kwa Beato lifestyle photo placeholder"
+            class="lifestyle-img"
+          />
+          <figcaption>coffee tastes better at ours ♡</figcaption>
+        </figure>
+
+        <div class="invite-copy">
+          <h2 class="section-title">The Vibe</h2>
+          <p>
+            Nothing too serious.<br><br>
+            Just our place, good coffee, something to eat, music on, and a house full of people we like —
+            plus a few people you might not know yet.<br><br>
+            Come for a cup.<br>
+            Stay for a chat.<br>
+            Meet someone new.<br>
+            Take over the aux.<br>
+            Make yourself at home.
+          </p>
+          <div class="side-doodle">the coffee is serious.<br>we are not. ☕</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="expect" id="expect">
+      <h2 class="section-title">At Ours</h2>
+
+      <div class="cards">
+        <article class="card" tabindex="0">
+          <div class="card-icon">☕</div>
+          <h3>Coffee</h3>
+          <p>A few coffees on. Have your usual, try something new, or just tell us what you’re in the mood for.</p>
+        </article>
+
+        <article class="card" tabindex="0">
+          <div class="card-icon">♫</div>
+          <h3>Music</h3>
+          <p>You’re on aux too. One song. Help soundtrack the house.</p>
+        </article>
+
+        <article class="card" tabindex="0">
+          <div class="card-icon">⌂</div>
+          <h3>House Rules</h3>
+          <p>You write them. We’ll put the good ones up. Democracy, sort of.</p>
+        </article>
+      </div>
+
+      <!-- HOPE STICKER -->
+      <div class="hope-sit">
+        <div class="hope-label">Hope<br>come say hi →</div>
+        <img src="assets/hope.svg" alt="Illustration of Hope sitting" class="hope-img" />
+      </div>
+
+      <div class="coffee-photo-2">
+        <img
+          src="assets/lifestyle-02.png"
+          alt="Kwa Beato lifestyle photo placeholder"
+          class="lifestyle-img lifestyle-img-wide"
+        />
+      </div>
+    </section>
+
+    <section class="rsvp" id="rsvp">
+      <h2 class="section-title">You Coming?</h2>
+
+      <div class="rsvp-wrap">
+        <p class="rsvp-intro">We’re keeping it small-ish.<br>
+        <span>Tell us below so we know how many cups to make.</span></p>
+
+        <form id="rsvpForm">
+          <div class="form-grid">
+            <div class="field">
+              <label for="name">Your name</label>
+              <input id="name" name="name" autocomplete="name" required placeholder="e.g. Alex" />
+            </div>
+
+            <div class="field">
+              <label for="phone">Your number <span class="label-note">so we can send the address</span></label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" required placeholder="08X XXX XXXX" />
+            </div>
+
+            <div class="field full">
+              <label for="coming">So… are you coming?</label>
+              <select id="coming" name="coming" required>
+                <option value="" selected disabled>Select one</option>
+                <option>Of course</option>
+                <option>Can’t make it 😭</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="party">Who should we make room for?</label>
+              <select id="party" name="party_size" required>
+                <option value="" selected disabled>Select one</option>
+                <option value="1">Just me</option>
+                <option value="2">Me + one</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <span class="legend">What should we make you first?</span>
+              <div class="choice-grid">
+                <div class="choice">
+                  <input type="radio" id="strong" name="first_drink" value="Strong" required>
+                  <label for="strong">Something strong</label>
+                </div>
+                <div class="choice">
+                  <input type="radio" id="milky" name="first_drink" value="Milky">
+                  <label for="milky">Something milky</label>
+                </div>
+                <div class="choice">
+                  <input type="radio" id="cold" name="first_drink" value="Cold">
+                  <label for="cold">Something cold</label>
+                </div>
+                <div class="choice">
+                  <input type="radio" id="surprise" name="first_drink" value="Surprise me">
+                  <label for="surprise">You choose</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="song">You get one song on the aux. What are you playing?</label>
+              <input id="song" name="song" placeholder="No pressure… but choose well" />
+            </div>
+
+            <div class="field full">
+              <label for="rule">If Kwa Beato had a house rule, what would it be?</label>
+              <input id="rule" name="house_rule" placeholder="Make it good. We might actually use it." />
+            </div>
+
+            <div class="field full">
+              <label for="notes">Anything we should know before you land? <span class="label-note">(allergies, vibes, etc.)</span></label>
+              <textarea id="notes" name="notes" placeholder="Allergies, dietary stuff, anything useful. No essays needed."></textarea>
+            </div>
+          </div>
+
+          <button class="submit" type="submit">Count me in ☕</button>
+          <!-- RSVP endpoint note:
+               The current demo stores submissions locally in the browser.
+               Connect this form to Google Sheets / Apps Script before launch.
+          -->
+        </form>
+
+        <div class="success" id="successMessage" role="status" aria-live="polite">
+          <h3>You’re in. ☕</h3>
+          <p>
+          We’ll text you the exact address the day before.<br>
+          Come hungry for coffee and conversation.
+        </p>
+        <div class="success-stamp">HOUSE-SIZED · ONE DAY ONLY</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-script">Ruto must go… but first, coffee.</div>
+      <small>COFFEE NOMADS</small>
+      <div class="footer-tagline">coffee is better with people</div>
+    </footer>
+
+  </main>
+
+    <div class="sticky-rsvp" id="stickyRsvp">
+      <div>
+        <strong>Kwa Beato Café</strong>
+        <span>Saturday · 3rd October · 2–7pm · Dublin</span>
+      </div>
+      <a href="#rsvp">I’m coming →</a>
+    </div>
+
+  <script>
+    /* =========================================================
+       1) ALLAN SCROLL ANIMATION
+       ---------------------------------------------------------
+       The sticker "falls" as the page scrolls:
+       - moves down
+       - swings side to side
+       - rotates
+       - subtly scales
+       You can tune the numbers in updateAllan().
+       ========================================================= */
+
+    const allan = document.getElementById('allanSticker');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function clamp(value, min, max){
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function updateAllan(){
+      if (!allan || reduceMotion) return;
+
+      const scrollY = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? clamp(scrollY / docHeight, 0, 1) : 0;
+
+      // Vertical fall
+      const y = progress * (window.innerHeight * 0.62);
+
+      // Side-to-side wandering path
+      const x = Math.sin(progress * Math.PI * 5.2) * 52
+              + Math.sin(progress * Math.PI * 2.1) * 18;
+
+      // Rotate through the "fall"
+      const rotation = 8 + Math.sin(progress * Math.PI * 6) * 19;
+
+      // Tiny zoom for depth
+      const scale = 1 + Math.sin(progress * Math.PI) * 0.07;
+
+      // Fade it slightly near the very bottom
+      const opacity = progress > 0.90
+        ? 1 - ((progress - 0.90) / 0.10) * 0.5
+        : 1;
+
+      // Mobile starts closer to the right edge; larger screens sit farther out
+      const baseX = window.innerWidth < 520 ? 96 : 175;
+
+      allan.style.transform =
+        `translate3d(calc(-50% + ${baseX + x}px), ${y}px, 0)
+         rotate(${rotation}deg)
+         scale(${scale})`;
+
+      allan.style.opacity = opacity;
+    }
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking){
+        window.requestAnimationFrame(() => {
+          updateAllan();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive:true });
+
+    window.addEventListener('resize', updateAllan);
+    updateAllan();
+
+
+
+
+    // Make the feature cards feel interactive on touch screens too.
+    document.querySelectorAll('.card').forEach((card) => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.card').forEach((item) => {
+          if (item !== card) item.classList.remove('is-active');
+        });
+        card.classList.toggle('is-active');
+      });
+    });
+
+
+    const stickyRsvp = document.getElementById('stickyRsvp');
+    const rsvpSection = document.getElementById('rsvp');
+
+    if (stickyRsvp && rsvpSection && 'IntersectionObserver' in window){
+      const rsvpObserver = new IntersectionObserver((entries) => {
+        stickyRsvp.style.opacity = entries[0].isIntersecting ? '0' : '1';
+        stickyRsvp.style.pointerEvents = entries[0].isIntersecting ? 'none' : 'auto';
+      }, { threshold: 0.12 });
+      rsvpObserver.observe(rsvpSection);
+    }
+
+
+    /* =========================================================
+       2) RSVP FORM → GOOGLE SHEETS
+       ---------------------------------------------------------
+       The form posts every RSVP to a Google Apps Script Web App,
+       which writes the response into the connected Google Sheet.
+       Set GOOGLE_SCRIPT_URL after deploying the supplied Apps Script.
+       ========================================================= */
+
+    const form = document.getElementById('rsvpForm');
+    const success = document.getElementById('successMessage');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      if (!form.checkValidity()){
+        form.reportValidity();
+        return;
+      }
+
+      const data = Object.fromEntries(new FormData(form).entries());
+      data.submitted_at = new Date().toISOString();
+
+      /*
+        GOOGLE SHEETS CONNECTION
+        Paste the deployed Google Apps Script /exec URL here.
+      */
+      const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5Sl6XcigdUxAfza3I0eMPl_auBWUKU5dhvb-RSKhBsfHD-pEXyLU2zdi_8i7ghqb_/exec";
+
+      const submitButton = form.querySelector('.submit');
+      const originalButtonText = submitButton.textContent;
+      submitButton.disabled = true;
+      submitButton.textContent = 'Adding you to the list…';
+
+      try {
+        if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("PASTE_YOUR")) {
+          throw new Error("RSVP_BACKEND_NOT_CONNECTED");
+        }
+
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(data)
+        });
+
+        form.style.display = 'none';
+        if (stickyRsvp) stickyRsvp.style.display = 'none';
+        success.classList.add('show');
+
+        success.scrollIntoView({
+          behavior: reduceMotion ? 'auto' : 'smooth',
+          block: 'center'
+        });
+
+      } catch (error) {
+        console.error(error);
+
+        if (error.message === "RSVP_BACKEND_NOT_CONNECTED") {
+          alert("The RSVP list isn’t connected yet. Add the Google Apps Script URL before launch.");
+        } else {
+          alert("That didn’t go through. Give it one more try.");
+        }
+
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+      }
+    });
+  </script>
+</body>
+</html>
