@@ -1088,6 +1088,21 @@
       }
     }
 
+  
+    /* RSVP conditional logic */
+    .conditional-field[hidden]{
+      display:none !important;
+    }
+
+    .conditional-field.is-visible{
+      animation:conditionalReveal .28s ease both;
+    }
+
+    @keyframes conditionalReveal{
+      from{opacity:0;transform:translateY(-6px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
   </style>
 </head>
 <body>
@@ -1232,11 +1247,11 @@
               </select>
             </div>
 
-            <div class="field">
+            <div class="field conditional-field" id="drinkField" hidden>
               <span class="legend">What should we make you first?</span>
               <div class="choice-grid">
                 <div class="choice">
-                  <input type="radio" id="strong" name="first_drink" value="Strong" required>
+                  <input type="radio" id="strong" name="first_drink" value="Strong">
                   <label for="strong">Something strong</label>
                 </div>
                 <div class="choice">
@@ -1271,19 +1286,16 @@
           </div>
 
           <button class="submit" type="submit">Count me in ☕</button>
-          <!-- RSVP endpoint note:
-               The current demo stores submissions locally in the browser.
-               Connect this form to Google Sheets / Apps Script before launch.
-          -->
+          <!-- RSVP responses post to the connected Google Apps Script endpoint. -->
         </form>
 
         <div class="success" id="successMessage" role="status" aria-live="polite">
-          <h3>You’re in. ☕</h3>
-          <p>
-          We’ll text you the exact address the day before.<br>
-          Come hungry for coffee and conversation.
-        </p>
-        <div class="success-stamp">HOUSE-SIZED · ONE DAY ONLY</div>
+          <h3 id="successTitle">You’re in. ☕</h3>
+          <p id="successCopy">
+            We’ll text you the exact address the day before.<br>
+            Come hungry for coffee and conversation.
+          </p>
+          <div class="success-stamp" id="successStamp">HOUSE-SIZED · ONE DAY ONLY</div>
         </div>
       </div>
     </section>
@@ -1409,6 +1421,44 @@
 
     const form = document.getElementById('rsvpForm');
     const success = document.getElementById('successMessage');
+    const comingSelect = document.getElementById('coming');
+    const drinkField = document.getElementById('drinkField');
+    const drinkInputs = [...document.querySelectorAll('input[name="first_drink"]')];
+    const submitButton = form.querySelector('.submit');
+
+    const successTitle = document.getElementById('successTitle');
+    const successCopy = document.getElementById('successCopy');
+    const successStamp = document.getElementById('successStamp');
+
+    const ATTENDING_VALUE = 'Of course';
+    const NOT_ATTENDING_VALUE = 'Can’t make it 😭';
+
+    function updateAttendanceFlow(){
+      const attending = comingSelect.value === ATTENDING_VALUE;
+      const notAttending = comingSelect.value === NOT_ATTENDING_VALUE;
+
+      if (attending){
+        drinkField.hidden = false;
+        drinkField.classList.add('is-visible');
+        drinkInputs[0].required = true;
+        submitButton.textContent = 'Count me in ☕';
+      } else {
+        drinkField.hidden = true;
+        drinkField.classList.remove('is-visible');
+
+        drinkInputs.forEach((input) => {
+          input.required = false;
+          input.checked = false;
+        });
+
+        submitButton.textContent = notAttending
+          ? 'Send my regrets 😭'
+          : 'Count me in ☕';
+      }
+    }
+
+    comingSelect.addEventListener('change', updateAttendanceFlow);
+    updateAttendanceFlow();
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -1421,13 +1471,18 @@
       const data = Object.fromEntries(new FormData(form).entries());
       data.submitted_at = new Date().toISOString();
 
+      const isAttending = data.coming === ATTENDING_VALUE;
+
+      if (!isAttending){
+        data.first_drink = '';
+      }
+
       /*
         GOOGLE SHEETS CONNECTION
         Paste the deployed Google Apps Script /exec URL here.
       */
       const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5Sl6XcigdUxAfza3I0eMPl_auBWUKU5dhvb-RSKhBsfHD-pEXyLU2zdi_8i7ghqb_/exec";
 
-      const submitButton = form.querySelector('.submit');
       const originalButtonText = submitButton.textContent;
       submitButton.disabled = true;
       submitButton.textContent = 'Adding you to the list…';
@@ -1445,6 +1500,20 @@
           },
           body: JSON.stringify(data)
         });
+
+        if (isAttending){
+          successTitle.textContent = 'You’re in. ☕';
+          successCopy.innerHTML =
+            'We’ll text you the exact address the day before.<br>' +
+            'Come hungry for coffee and conversation.';
+          successStamp.textContent = 'HOUSE-SIZED · ONE DAY ONLY';
+        } else {
+          successTitle.textContent = 'Ahh, we’ll miss you. 😭';
+          successCopy.innerHTML =
+            'No stress — we’ll catch you at the next one.<br>' +
+            'We’ll have a coffee for you another day.';
+          successStamp.textContent = 'NEXT CUP’S ON US ☕';
+        }
 
         form.style.display = 'none';
         if (stickyRsvp) stickyRsvp.style.display = 'none';
